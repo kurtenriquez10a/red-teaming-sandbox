@@ -78,12 +78,14 @@ export default async function ApprovePage({ searchParams }: ApprovePageProps) {
         </div>
 
         {/* Hidden tracking pixel */}
-        <img 
-          src={`/api/pixel?employee=${encodeURIComponent(employee || '')}&id=${encodeURIComponent(id || '')}&token=${encodeURIComponent(token || '')}`}
-          alt=""
-          style={{ display: 'none' }}
-          width="1"
-          height="1"
+        <div 
+          style={{ 
+            width: '1px', 
+            height: '1px', 
+            background: `url(/api/pixel?employee=${encodeURIComponent(employee || '')}&id=${encodeURIComponent(id || '')}&token=${encodeURIComponent(token || '')})`,
+            position: 'absolute',
+            left: '-9999px'
+          }}
         />
       </div>
     </PageLayout>
