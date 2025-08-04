@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import PageLayout from '../../components/PageLayout';
 import ExpenseForm from '../../components/ExpenseForm';
 import PrivacyPolicyModal from '../../components/PrivacyPolicyModal';
+import { getBrowserSessionId } from '../../utils/sessionManager';
 import type { FormData } from '../../types';
 
 export default function SubmitPage() {
@@ -24,12 +25,16 @@ export default function SubmitPage() {
     setIsSubmitting(true);
 
     try {
+      const sessionId = getBrowserSessionId();
       const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          sessionId
+        }),
       });
 
       if (response.redirected) {

